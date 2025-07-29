@@ -1,1 +1,8 @@
-.node_modules package-lock.json
+# Игнорируем зависимости
+node_modules/
+
+# Игнорируем lock-файл (если используешь yarn или не хочешь фиксировать зависимости)
+package-lock.json
+
+# Переменные окружения
+.env
