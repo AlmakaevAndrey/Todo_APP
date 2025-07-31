@@ -26,6 +26,7 @@ function App() {
   if (error) return <p>Error loading todos</p>;
 
   return (
+    <div className="divider">
     <div>
       <h1>RTK query TODO</h1>
       <input
@@ -48,11 +49,12 @@ function App() {
                 onChange={() => toggleTodo(todo)}
               />
               {todo.title}
-              <button  onClick={() => deleteTodo(todo.id)}>X</button>
+              <button className="deleteButton"  onClick={() => deleteTodo(todo.id)}>X</button>
             </li>
           ))}
         </ul>
       )}
+    </div>
     </div>
   );
 }
