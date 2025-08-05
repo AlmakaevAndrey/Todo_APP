@@ -1,4 +1,3 @@
-import React from "react"
 import {
   useAddTodoMutation,
   useDeleteTodoMutation,
@@ -8,12 +7,18 @@ import {
 import { useState } from "react";
 import "./main.css";
 
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
 function App() {
-  const { data: todos, error, isLoading } = useGetTodosQuery(undefined, {refetchOnMountOrArgChange: true});
+  const { data: todos = [], error, isLoading } = useGetTodosQuery();
   const [addTodo] = useAddTodoMutation();
   const [toggleTodo] = useToggleTodoMutation();
   const [deleteTodo] = useDeleteTodoMutation();
-  const [newTodo, setNewTodo] = useState<string>("");
+  const [newTodo, setNewTodo] = useState("");
 
   const handleAdd = async () => {
     if (newTodo.trim() !== "") {
@@ -27,34 +32,42 @@ function App() {
 
   return (
     <div className="divider">
-    <div>
-      <h1>RTK query TODO</h1>
-      <input
-        type="text"
-        value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
-        placeholder="Add new todo"
-      />
-      <button onClick={handleAdd}>Add</button>
+      <div>
+        <h1>RTK Query TODO</h1>
+        <input
+          type="text"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          placeholder="Add new todo"
+        />
+        <button onClick={handleAdd} disabled={!newTodo.trim()}>
+          Add
+        </button>
 
-      {isLoading ? (
-        <p>Loading</p>
-      ) : (
         <ul>
-          {todos?.map((todo) => (
+          {todos.map((todo) => (
             <li key={todo.id}>
               <input
                 type="checkbox"
                 checked={todo.completed}
-                onChange={() => toggleTodo(todo)}
+                onChange={() =>
+                  toggleTodo({
+                    id: todo.id, completed: !todo.completed,
+                    title: ""
+                  })
+                }
               />
               {todo.title}
-              <button className="deleteButton"  onClick={() => deleteTodo(todo.id)}>X</button>
+              <button
+                className="deleteButton"
+                onClick={() => deleteTodo(todo.id)}
+              >
+                X
+              </button>
             </li>
           ))}
         </ul>
-      )}
-    </div>
+      </div>
     </div>
   );
 }
